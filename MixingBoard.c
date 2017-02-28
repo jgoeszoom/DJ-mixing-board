@@ -1,3 +1,13 @@
+/* Joseph Gozum
+ * Email: jgozu001@ucr.edu
+ *
+ * UCR CS120B - Final Lab Project
+ * Description: A simplified version of a DJ Mixing board,
+ * this takes in input from a 10K potentiometer and 4x4 keypad
+ * to navigate the menu system as well as manipulate the
+ * properties of the included and user created songs.
+*/
+
 #include "avr/io.h"
 #include "avr/interrupt.h"
 #include "keypad.h"
@@ -6,11 +16,13 @@
 #include "PWM.h"
 #include "scheduler.h"
 #include "timer.h"
+#include "ADC.h"
 
 const unsigned short tasksNum = 1;
 task tasks[tasksNum];
 
 unsigned char uchar_keypadInput = 0x00;
+unsigned short ushort_Potentiometer = 0x0000;
 
 enum Keypad_States {GetInput};
 int GetKeypad (int state) {
@@ -43,17 +55,37 @@ int GetKeypad (int state) {
 	return state;
 }
 
+enum Potentiometer_States {GetValue}
+int GetPotentiometer(int state) {
+	unsigned short Potentiometer = ADC;
+	switch(state) {
+		case GetValue:
+			ushort_Potentiometer = Potentiometer;
+			state = GetValue;
+			break;
+		default: state = GetValue; break;
+	}
+	return state;
+}
+
 int main () {
       unsigned short iter = 0;
-      task[iter].state = GetOutput;
+      task[iter].state = GetInput;
 	task[iter].period = 1;
 	task[iter].elapsedTime = 0;
-	task[iter].TickFct = &GetKey;
+	task[iter].TickFct = &GetKeypad;
+	++iter;
+	task[iter].state = GetValue;
+	task[iter].period = 1;
+	task[iter].elapsedTime = 0;
+	task[iter].TickFct = &GetPotentiometer;
 
       unsigned short taskPeriod = 1;
 
       TimerSet(taskPeriod);
       TimerOn();
+
+	ADC_init();
 
       while(1) {
                   for ( iter = 0; iter < tasksNum; ++iter ) {
