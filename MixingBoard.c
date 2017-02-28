@@ -6,11 +6,13 @@
 #include "PWM.h"
 #include "scheduler.h"
 #include "timer.h"
+#include "ADC.h"
 
 const unsigned short tasksNum = 1;
 task tasks[tasksNum];
 
 unsigned char uchar_keypadInput = 0x00;
+unsigned short ushort_Potentiometer = 0;
 
 enum Keypad_States {GetInput};
 int GetKeypad (int state) {
@@ -43,6 +45,19 @@ int GetKeypad (int state) {
 	return state;
 }
 
+enum Potentiometer_States {GetValue}
+int GetPotentiometer(int state) {
+	unsigned short Potentiometer = ADC;
+	switch(state) {
+		case GetValue:
+			ushort_Potentiometer = Potentiometer;
+			state = GetValue;
+			break;
+		default: state = GetValue; break;
+	}
+	return state;
+}
+
 int main () {
       unsigned short iter = 0;
       task[iter].state = GetOutput;
@@ -54,6 +69,8 @@ int main () {
 
       TimerSet(taskPeriod);
       TimerOn();
+
+	ADC_init();
 
       while(1) {
                   for ( iter = 0; iter < tasksNum; ++iter ) {
