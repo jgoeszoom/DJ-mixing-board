@@ -22,35 +22,35 @@ const unsigned short tasksNum = 1;
 task tasks[tasksNum];
 
 unsigned char uchar_keypadInput = 0x00;
+unsigned char uchar_prevkeypadInput = 0x01;
+unsigned char uchar_keyPressFlag = 0;
+
 unsigned short ushort_Potentiometer = 0x0000;
 
-enum Keypad_States {GetInput};
-int GetKeypad (int state) {
-	unsigned char  Key = GetKeypadKey();
+enum Keypad_States {Pressed, Unpressed};
+int GetKeypad(int state) {
+	unsigned char Key = GetKeypadKey();
 	switch(state) {
-		case GetOutput:
-			switch (Key) {
-				case '\0': uchar_keypadInput = 0x1F; break;
-				case '0': uchar_keypadInput = 0x00; break;
-				case '1': uchar_keypadInput = 0x01; break;
-				case '2': uchar_keypadInput = 0x02; break;
-				case '3':  uchar_keypadInput = 0x03; break;
-				case '4': uchar_keypadInput = 0x04; break;
-				case '5': uchar_keypadInput = 0x05; break;
-				case '6': uchar_keypadInput = 0x06; break;
-				case '7': uchar_keypadInput = 0x07;  break;
-				case '8': uchar_keypadInput = 0x08; break;
-				case '9': uchar_keypadInput = 0x09; break;
-				case 'A': uchar_keypadInput = 0x0A; break;
-				case 'B': uchar_keypadInput = 0x0B; break;
-				case 'C': uchar_keypadInput = 0x0C; break;
-				case 'D': uchar_keypadInput = 0x0D; break;
-				case '*': uchar_keypadInput = 0x0E; break;
-				case '#': uchar_keypadInput = 0x0F; break;
-				default: uchar_keypadInput = 0x1B; break;
+		case unpressed:
+			if (x != '\0') {
+				uchar_keypadInput = key;
+				uchar_keyPressFlag = 1;
+				state = Pressed;
+			} else {
+				state = Unpressed;
 			}
-			state = GetInput; break;
-		default: state = GetInput; break;
+			break;
+		case pressed:
+			if (x == '\0') {
+				uchar_keyPressFlag = 0;
+				state = Unpressed;
+				} else {
+				state = Pressed;
+			}
+			break;
+		default:
+			state = Unpressed;
+			break;
 	}
 	return state;
 }
@@ -68,6 +68,19 @@ int GetPotentiometer(int state) {
 	return state;
 }
 
+enum Display_States {Main_Menu}
+int Display (int state) {
+	case Main_Menu:
+		if( ) {
+
+		} else if {
+
+		} else if {
+
+		}
+
+}
+
 int main () {
       unsigned short iter = 0;
       task[iter].state = GetInput;
@@ -79,6 +92,11 @@ int main () {
 	task[iter].period = 1;
 	task[iter].elapsedTime = 0;
 	task[iter].TickFct = &GetPotentiometer;
+	++iter;
+	task[iter].state = Main_Menu;
+	task[iter].period = 1;
+	task[iter].elapsedTime = 0;
+	task[iter].TickFct = &Display;
 
       unsigned short taskPeriod = 1;
 
@@ -86,6 +104,9 @@ int main () {
       TimerOn();
 
 	ADC_init();
+
+	LCD_init();
+	LCD_ClearScreen();
 
       while(1) {
                   for ( iter = 0; iter < tasksNum; ++iter ) {
