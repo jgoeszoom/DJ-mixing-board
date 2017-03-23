@@ -15,3 +15,7 @@ The LCD will be used to help the user navigate the menu that I will implement to
 to manipulate the music that they either make themselves or the built-in music that I will include. 
 The sound buzzer will be to play the music that was created and or manipulated. 
 The LEDs will be to provide the user some visuals to accompany the music. 
+
+# Known Bugs
+Currently the create sub-menu portion of the code does not work. 
+As of now it is impossible to create your own music to manipulate. 
