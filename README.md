@@ -1,7 +1,7 @@
 # UCR-CS120B
 Repository containing the various versions and pertinent files for my final project for the UCR CS120B course.
 
-CS120B at UCR is the introduction to embedded systems class. Topics covered in the class include 
+CS120B at UCR is the introduction to advanced embedded systems class. Topics covered in the class include 
 embedded processor programming, custom processor design, standard peripherals such as buttons, joysticsk,
 etc. 
 
